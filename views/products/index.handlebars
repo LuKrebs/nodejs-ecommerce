@@ -1,0 +1,15 @@
+<h1>Produtos</h1>
+
+{{#each products}}
+  <div class="card card-body mb-2">
+    <h4>{{name}}</h4>
+    <p>{{description}}</p>
+    <a class="btn btn-sm btn-outline-primary mb-2" href="/products/edit/{{id}}">Editar</a>
+    <form action="/products/{{id}}?_method=DELETE" method="post">
+      <input type="hidden" name="_method" value="DELETE">
+      <button type="submit" class="btn btn-sm btn-outline-danger mb-2">Deletar</button>
+    </form>
+  </div>
+{{else}}
+  <p>Sem produtos cadastrados</p>
+{{/each}}

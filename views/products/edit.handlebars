@@ -1,0 +1,56 @@
+<h1 class="mb-4">Editar Produto</h1>
+
+{{#each errors}}
+<div class="alert alert-danger">{{text}}</div>
+{{else}} {{/each}}
+
+<div class="card card-body">
+  <form action="/products/{{product.id}}?_method=PUT" method="post">
+    <input type="hidden" name="_method" value="PUT">
+    <div class="form-group">
+      <label for="name">Nome</label>
+      <input type="text" name="name" value="{{product.name}}" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="description">Descrição</label>
+      <textarea name="description" class="form-control" required rows="4">{{product.description}}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="noDiscountPrice">Preço sem desconto</label>
+      <input type="text" id="noDiscountPrice" name="noDiscountPrice" value="{{product.noDiscountPrice}}" class="form-control" required/>
+    </div>
+    <div class="form-group">
+      <label for="discountPrice">Preço com desconto</label>
+      <input type="text" id="discountPrice" name="discountPrice" value="{{product.discountPrice}}" class="form-control" required/>
+    </div>
+    <div class="form-group">
+      <label for="qty">Quantidade disponível</label>
+      <input type="number" name="qty" value="{{product.qty}}" class="form-control" required/>
+    </div>
+    <div class="form-group">
+      <label for="category">Categoria</label>
+      <select name="category" value="{{product.category}}" class="form-control" required>
+        <option value="Tiaras">Tiaras</option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Atualiar Produto</button>
+  </form>
+</div>
+
+<script type="text/javascript">
+  $("#noDiscountPrice").maskMoney({
+    prefix: 'R$ ',
+    allowNegative:
+      true, thousands: '.',
+    decimal: ',',
+    affixesStay: false
+  });
+  $("#discountPrice").maskMoney({
+    prefix: 'R$ ',
+    allowNegative:
+      true, thousands: '.',
+    decimal: ',',
+    affixesStay: false
+  });
+</script>
