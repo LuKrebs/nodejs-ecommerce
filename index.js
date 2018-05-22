@@ -2,10 +2,15 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+const keys = require('./config/keys');
 const flash = require('connect-flash');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const app = express();
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
+const sonjaBabysBucket = 'sonjababys';
+const awsKey = keys.amazonAccessKey;
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost/sonjababys-dev')
@@ -28,10 +33,11 @@ app.use(session({
   saveUninitialized: true
 }));
 
+// Global variables
 app.use((req, res, next) => {
-  req.locals.success_msg = req.flash('success_msg');
-  req.locals.error_msg = req.flash('error_msg');
-  req.locals.error = req.flash('error');
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
   next();
 });
 
@@ -72,13 +78,19 @@ app.put('/products/:id', (req, res) => {
       
       product
         .save()
-        .then(() => res.redirect('/products'));
+        .then(() => {
+          req.flash('success_msg', 'Produto atualizado');
+          res.redirect('/products');
+        });
     });
 });
 
 app.delete('/products/:id', (req, res) => {  
   Product.remove({ _id: req.params.id })
-    .then(() => res.redirect('/products'));
+    .then(() => {
+      req.flash('success_msg', 'Produto removido');
+      res.redirect('/products');
+    });
 });
 
 app.get('/products', (req, res) => {
@@ -114,6 +126,7 @@ app.post('/products', (req, res) => {
     new Product(req.body)
       .save()
       .then(() => {
+        req.flash('success_msg', 'Produto adicionado');
         res.redirect('/products');
       });
   }
